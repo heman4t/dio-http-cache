@@ -74,14 +74,14 @@ class DioCacheManager {
 
   Response _buildResponse(
       CacheObj obj, int statusCode, RequestOptions options) {
-    Headers headers;
+    DioHttpHeaders headers;
     if (null != obj.headers) {
-      headers = Headers.fromMap((Map<String, List<dynamic>>.from(
+      headers = DioHttpHeaders.fromMap((Map<String, List<dynamic>>.from(
               jsonDecode(utf8.decode(obj.headers))))
           .map((k, v) => MapEntry(k, List<String>.from(v))));
     }
     if (null == headers) {
-      headers = Headers();
+      headers = DioHttpHeaders();
       options.headers.forEach((k, v) => headers.add(k, v ?? ""));
     }
     // add flag
@@ -130,7 +130,7 @@ class DioCacheManager {
         maxAge: maxAge,
         maxStale: maxStale,
         statusCode: response.statusCode,
-        headers: utf8.encode(jsonEncode(response.headers.map)));
+        headers: utf8.encode((response.headers as DioHttpHeaders).toString()));
     return _manager?.pushToCache(obj);
   }
 
